@@ -8,10 +8,13 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
+// URNController encapsulates structs and logic required for fulfilling URN requests
 type URNController struct {
 	Redis *redis.Client
 }
 
+// NewController returns a pointer to a URNController with a Redis client
+// for the provided address attached
 func NewController(redisAddress string) *URNController {
 	client := redis.NewClient(&redis.Options{
 		Addr: redisAddress,
@@ -21,6 +24,8 @@ func NewController(redisAddress string) *URNController {
 	}
 }
 
+// GetURN retrieves all hash data associated with the :id param.
+// The hash data is returned to the client in a JSON payload.
 func (con *URNController) GetURN(c *gin.Context) {
 	id := c.Param("id")
 	cmd := con.Redis.HGetAll(c, id)
